@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\Ninmonkey.TemplateText"
+		},
+		{
+			"path": "..\\Mini.Examples\\Templates"
+		},
+		{
+			"path": "..\\Splat.nin"
+		}
+	],
+	"settings": {
+		"markdownlint.config": {
+			"MD028": false,
+			"MD025": {
+				"front_matter_title": ""
+			}
+		}
+	}
+}
