@@ -1,6 +1,4 @@
 #Requires -Version 7
-#Requires -Module NameIt
-Import-Module NameIt
 
 $SampleSrc = @'
 function convertFrom-ExampleNumber {
@@ -27,40 +25,45 @@ function New-VSCodeSnippet {
     #>
     [CmdletBinding(PositionalBinding = $false)]
     param(
-        [Parameter(Mandatory, Position = 0)]
-        [string[]]$Text
+        [Parameter(Mandatory, Position = 0, ValueFromPipeline)]
+        [string]$Text
     )
-    
+
     begin {
-        $lines = [list[string]]::new()
+        $inputList = [list[string]]::new()
     }
     process {
-        $Name | ForEach-Object {
-            $lines.Add( $_ )
-        }
+        $inputList.Add( $Text )
     }
     end {
         $strAccum = [System.Text.StringBuilder]::new()
         $strAutotranslate = [System.Text.StringBuilder]::new()
         h1 'original'
-        $Lines | str str ''
 
+        $asLines = ($inputList -join '') -split '\r?\n'
         #optional mappings. order matters.
-        $lines | ForEach-Object { 
+        $asLines | ForEach-Object {
             $curLine = $_
             $str = $curLine -replace '"', ''
-            
+
             $strAccum.Append( $str )
             $strAutotranslate.Append( ($curLine | ConvertTo-Json ) ?? $null )
         }
 
         h1 'accum'
-        $strAccum | str nl 22 
+        $strAccum -join ''
+        hr
+        $strAccum -join "`n"
+
+        # | str nl 22
         h1 'auto'
-        $strAutotranslate | str nl 22 
+        $strAutotranslate
+        # | SplitStr -SplitStyle Newline | str nl 2
     }
 }
 
-New-VSCodeSnippet ($SampleSrc -join '')
-hr 
-
+# New-VSCodeSnippet ($SampleSrc -join "`n")
+$SampleSrc | New-VSCodeSnippet
+# New-VSCodeSnippet $SampleSrc
+| str nl 2
+hr
