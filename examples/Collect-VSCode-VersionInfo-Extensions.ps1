@@ -1,6 +1,14 @@
 ﻿using namespace system.collections.generic
 $script:StrNull ??= "[`u{2400}]"
 
+$readmeMd = @'
+See more:
+
+- [vsce](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#vsce)
+- <https://code.visualstudio.com/api/working-with-extensions/continuous-integration>
+
+'@
+
 enum IsEnabled_vs {
     Disabled = 0
     Enabled = 1
@@ -16,6 +24,7 @@ enum VSCodeAppType_vs {
 }
 
 class ExtensionInfo_vs {
+
     <#
     .synopsis
         A Single Extension Record
@@ -33,12 +42,6 @@ class ExtensionInfo_vs {
         [String]$RawString
     ) {
         $this.Name, $this.Version = $RawString -split '@'
-        # try {
-        #     $this.VersionInstance = $this.Version
-        # } catch {
-        #     $This.VersionInstance = $script:StrNull
-        # }
-
     }
 }
 
@@ -96,12 +99,32 @@ class VSCodeExtensionsInfo {
     }
 }
 
-$code_info = [VSCodeExtensionsInfo]::new('code.cmd')
-$vivy_info = [VSCodeExtensionsInfo]::new('code-insiders.cmd')
-$RootExport = Get-Item -ea stop (Join-Path $PSScriptRoot '.output')
-$code_info | to->Json -EnumsAsStrings | Sc (Join-Path $RootExport 'vs-code-extensions.json')
-$vivy_info | to->Json -EnumsAsStrings | Sc (Join-Path $RootExport 'vs-code-insiders-extensions.json')
-Get-ChildItem $RootExport *.json
+function Invoke-CollectExtensionInfo {
+    New-Alias 'to->Json' -Value 'ConvertTo-Json'
+
+    $code_info = [VSCodeExtensionsInfo]::new('code.cmd')
+    $vivy_info = [VSCodeExtensionsInfo]::new('code-insiders.cmd')
+    $RootExport = Get-Item -ea stop (Join-Path $PSScriptRoot '.output')
+    $code_info | to->Json -EnumsAsStrings | Sc (Join-Path $RootExport 'vs-code-extensions.json')
+    $vivy_info | to->Json -EnumsAsStrings | Sc (Join-Path $RootExport 'vs-code-insiders-extensions.json')
+
+    # Get-ChildItem $RootExport *.json
+
+    @(
+        Get-Item (Join-Path $RootExport 'vs-code-extensions.json')
+        Get-Item (Join-Path $RootExport 'vs-code-insiders-extensions.json')
+    ) | Join-String -sep "`n -" -op "Wrote files: ... `n -"
+
+    'unknown stuff'
+    & $code_info.AppPath @('--status')
+    | sc (Join-Path $RootExport 'vs-code-status.txt')
+
+    & $vivy_info.AppPath @('--status')
+    | sc (Join-Path $RootExport 'vs-code-insiders-status.txt')
+}
+
+Invoke-CollectExtensionInfo
+
 
 if ($False) {
     # old, manual invocation method
@@ -112,28 +135,12 @@ if ($False) {
     $codeAddons = & $CodeBin @('--list-extensions', '--show-versions')
     | Sort-Object -Unique | ForEach-Object {
         $setting = [ExtensionInfo_vs]::new($_)
-        # $setting.AppType = 'Code'
         return $setting
-
-        # if ($_ -match '(?<Name>)@(<?Version>[\d\.]+?)') {
-        # [pscustomobject]@{
-
-        #     Name    = $Matches.Name
-        #     Version = $Matches.Version
-        # }
     }
     $codeInsidersAddons = & $codeInsidersBin @('--list-extensions', '--show-versions')
     | Sort-Object -Unique | ForEach-Object {
         $setting = [ExtensionInfo_vs]::new($_)
-        # $setting.AppType = 'Insiders'
         return $setting
-
-        # if ($_ -match '(?<Name>)@(<?Version>[\d\.]+?)') {
-        # [pscustomobject]@{
-
-        #     Name    = $Matches.Name
-        #     Version = $Matches.Version
-        # }
     }
     $RootExport = Get-Item -ea stop (Join-Path $PSScriptRoot '.output')
     $codeAddons | to->Json -EnumsAsStrings | Sc (Join-Path $RootExport 'vs-code-extensions.json')
