@@ -1,4 +1,5 @@
-﻿$script:StrNull ??= "[`u{2400}]"
+﻿using namespace system.collections.generic
+$script:StrNull ??= "[`u{2400}]"
 
 enum IsEnabled_vs {
     Disabled = 0
@@ -41,41 +42,101 @@ class ExtensionInfo_vs {
     }
 }
 
+Write-Warning @'
+next todo:
+    - [ ] coerce strings 'code.cmd' and 'code-insiders.cmd' to [VSCodeAppType_vs]
+    - [ ] [VSCodeExtensionsInfo] ctor to
+'@
+
+
 class VSCodeExtensionsInfo {
-    [VSCodeAppType_vs]$AppType = [VSCodeAppType_vs]::Unknown # maybe moved to collection as a whole
+    <#
+    .synopsis
+        represents one instance of vscode-[insiders].cmd and installed extensions
+    .example
+        PS> $code_info = [VSCodeExtensionsInfo]::new('code')
+            $code_info | select *
+        PS> $code_info = [VSCodeExtensionsInfo]::new('code.cmd')
+        PS> $ivy_info = [VSCodeExtensionsInfo]::new('code-insiders.cmd')
+    .notes
+    future:
+        - [ ] manual switch required unless enum coercion to 'code.cmd' works
+        - [ ] export function
+    #>
+
+    # code or insiders?
+    [VSCodeAppType_vs]$AppType = [VSCodeAppType_vs]::Unknown
+
+    # FulLName to bin
     [IO.FileInfo]$AppPath
 
+    # enumerate extensions
+    [list[ExtensionInfo_vs]]$Extensions = [list[ExtensionInfo_vs]]::new()
+
+    VSCodeExtensionsInfo(
+        [String]$Command # name and/or path. code.cmd is valid
+    ) {
+        $binCmd = Get-Command -CommandType Application -Name $Command | Select-Object -First 1
+        $this.AppPath = $binCmd | Get-Item -ea stop
+
+        # until I get coerceion added to an enum
+        $this.AppType = if ($binCmd.Name -match 'insiders') {
+            [VSCodeAppType_vs]::Insiders
+        } else {
+            [VSCodeAppType_vs]::Code
+        }
+
+        $binArgs = ('--list-extensions', '--show-versions')
+        $this.Extensions = & $binCmd @binArgs
+        | Sort-Object -Unique | ForEach-Object {
+            $setting = [ExtensionInfo_vs]::new($_)
+            # $setting.AppType = 'Code'
+            return $setting
+        }
+    }
 }
 
-$codeBin = Get-Command -CommandType Application -Name 'code.cmd' | Select-Object -First 1
-$codeInsidersBin = Get-Command -CommandType Application -Name 'code-insiders.cmd' | Select-Object -First 1
+$code_info = [VSCodeExtensionsInfo]::new('code.cmd')
+$vivy_info = [VSCodeExtensionsInfo]::new('code-insiders.cmd')
+$RootExport = Get-Item -ea stop (Join-Path $PSScriptRoot '.output')
+$code_info | to->Json -EnumsAsStrings | Sc (Join-Path $RootExport 'vs-code-extensions.json')
+$vivy_info | to->Json -EnumsAsStrings | Sc (Join-Path $RootExport 'vs-code-insiders-extensions.json')
+Get-ChildItem $RootExport *.json
 
-$codeAddons = & $CodeBin @('--list-extensions', '--show-versions')
-| Sort-Object -Unique | ForEach-Object {
-    $setting = [ExtensionInfo_vs]::new($_)
-    # $setting.AppType = 'Code'
-    return $setting
+if ($False) {
+    # old, manual invocation method
 
-    # if ($_ -match '(?<Name>)@(<?Version>[\d\.]+?)') {
-    # [pscustomobject]@{
+    $codeBin = Get-Command -CommandType Application -Name 'code.cmd' | Select-Object -First 1
+    $codeInsidersBin = Get-Command -CommandType Application -Name 'code-insiders.cmd' | Select-Object -First 1
 
-    #     Name    = $Matches.Name
-    #     Version = $Matches.Version
-    # }
+    $codeAddons = & $CodeBin @('--list-extensions', '--show-versions')
+    | Sort-Object -Unique | ForEach-Object {
+        $setting = [ExtensionInfo_vs]::new($_)
+        # $setting.AppType = 'Code'
+        return $setting
+
+        # if ($_ -match '(?<Name>)@(<?Version>[\d\.]+?)') {
+        # [pscustomobject]@{
+
+        #     Name    = $Matches.Name
+        #     Version = $Matches.Version
+        # }
+    }
+    $codeInsidersAddons = & $codeInsidersBin @('--list-extensions', '--show-versions')
+    | Sort-Object -Unique | ForEach-Object {
+        $setting = [ExtensionInfo_vs]::new($_)
+        # $setting.AppType = 'Insiders'
+        return $setting
+
+        # if ($_ -match '(?<Name>)@(<?Version>[\d\.]+?)') {
+        # [pscustomobject]@{
+
+        #     Name    = $Matches.Name
+        #     Version = $Matches.Version
+        # }
+    }
+    $RootExport = Get-Item -ea stop (Join-Path $PSScriptRoot '.output')
+    $codeAddons | to->Json -EnumsAsStrings | Sc (Join-Path $RootExport 'vs-code-extensions.json')
+    $codeInsidersAddons | to->Json -EnumsAsStrings | Sc (Join-Path $RootExport 'vs-code-insiders-extensions.json')
+    Get-ChildItem $RootExport *.json
 }
-$codeInsidersAddons = & $codeInsidersBin @('--list-extensions', '--show-versions')
-| Sort-Object -Unique | ForEach-Object {
-    $setting = [ExtensionInfo_vs]::new($_)
-    # $setting.AppType = 'Insiders'
-    return $setting
-
-    # if ($_ -match '(?<Name>)@(<?Version>[\d\.]+?)') {
-    # [pscustomobject]@{
-
-    #     Name    = $Matches.Name
-    #     Version = $Matches.Version
-    # }
-}
-
-$codeAddons
-$codeInsidersAddons
