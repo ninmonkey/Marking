@@ -1,0 +1,22 @@
+[
+  {
+    "ComName": "System.__ComObject#{286e6f1b-7113-4355-9562-96b7e9d64c54}",
+    "Name": "Shell.Application"
+  },
+  {
+    "ComName": "System.__ComObject#{41904400-be18-11d3-a28b-00104bd35090}",
+    "Name": "WScript.Shell"
+  },
+  {
+    "ComName": "System.__ComObject#{24be5a31-edfe-11d2-b933-00104b365c9f}",
+    "Name": "WScript.Network"
+  },
+  {
+    "ComName": "System.__ComObject#{42c642c1-97e1-11cf-978f-00a02463e06f}",
+    "Name": "Scripting.Dictionary"
+  },
+  {
+    "ComName": "System.__ComObject#{2a0b9d10-4b87-11d3-a97a-00104b365c9f}",
+    "Name": "Scripting.FileSystemObject"
+  }
+]

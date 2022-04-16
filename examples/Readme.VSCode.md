@@ -1,4 +1,5 @@
 - [About](#about)
+- [Todo](#todo)
 - [Config Paths](#config-paths)
   - [UserDataDir:](#userdatadir)
   - [ExtensionsDir:](#extensionsdir)
@@ -8,6 +9,11 @@
 # About
 
 VS Code
+
+# Todo
+
+- [ ] coerce `enum` from strings 'code.cmd' and 'code-insiders.cmd' to [VSCodeAppType_vs]
+- [ ] better json coercion of `[IO.FileInfo]$AppPath` as a single string
 
 # Config Paths
 

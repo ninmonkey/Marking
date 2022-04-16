@@ -56,9 +56,20 @@ class ExtensionInfo_vs {
 Write-Warning @'
 next todo:
     - [ ] coerce strings 'code.cmd' and 'code-insiders.cmd' to [VSCodeAppType_vs]
-    - [ ] [VSCodeExtensionsInfo] ctor to
+    - [ ] better json coercion of '[IO.FileInfo]$AppPath' to a single string
 '@
 
+class VSCodeVersion {
+    # main version (also includes insider or not)
+    # is not a [Version] because the returned value is: '1.66.0-insider'
+    [string]$Version # ex= '1.66.2'
+
+    # Commit of app
+    [string]$Commit # ex= 'dfd34e8260c270da74b5c2d86d61aee4b6d56977'
+
+    # Architecture
+    [string]$Arch # ex= 'x64'
+}
 
 class VSCodeExtensionsInfo {
     <#
@@ -78,6 +89,9 @@ class VSCodeExtensionsInfo {
     # code or insiders?
     [VSCodeAppType_vs]$AppType = [VSCodeAppType_vs]::Unknown
 
+    # App Version 1.66, commmit hash etc.
+    [VSCodeVersion]$AppVersion
+
     # FulLName to bin
     [IO.FileInfo]$AppPath
 
@@ -96,8 +110,15 @@ class VSCodeExtensionsInfo {
         } else {
             [VSCodeAppType_vs]::Code
         }
+        $binArgs = @('--version')
+        $version, $commit, $arch = & $binCmd @binArgs
+        $This.AppVersion = @{
+            Version = $Version
+            Commit  = $commit
+            Arch    = $arch
+        }
 
-        $binArgs = ('--list-extensions', '--show-versions')
+        $binArgs = @('--list-extensions', '--show-versions')
         $this.Extensions = & $binCmd @binArgs
         | Sort-Object -Unique | ForEach-Object {
             $setting = [ExtensionInfo_vs]::new($_)
