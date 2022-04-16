@@ -1,13 +1,21 @@
 ﻿using namespace system.collections.generic
 $script:StrNull ??= "[`u{2400}]"
 
-$readmeMd = @'
-See more:
+$PathsMapping = @{
+    UserDataDir               = Get-Item "${Env:AppData}/Code" # the cli path
+    UserSettingsRoot          = "${Env:AppData}/Code/User"
+    ExtensionsDir             = Get-Item '~/.vscode/extensions'  # the cli path. aka: %UserProfile%
 
-- [vsce](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#vsce)
-- <https://code.visualstudio.com/api/working-with-extensions/continuous-integration>
+    UserDataDir_Insiders      = Get-Item "${Env:AppData}/Code - Insiders" # the cli path
+    UserSettingsRoot_Insiders = "${Env:AppData}/Code - Insiders/User"
+    ExtensionsDir_Insiders    = Get-Item '~/.vscode-insiders/extensions'  # the cli path. aka: %UserProfile%
+}
+$PathsMapping
 
-'@
+$PathsToInvestigate = @{
+    Storage = Get-Item  "$Env:AppData/Code/storage.json"
+}
+$PathsToInvestigate
 
 enum IsEnabled_vs {
     Disabled = 0
