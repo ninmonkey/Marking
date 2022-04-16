@@ -15,30 +15,45 @@ enum VSCodeAppType_vs {
 }
 
 class ExtensionInfo_vs {
+    <#
+    .synopsis
+        A Single Extension Record
+    #>
     [string]$Name
     [string]$Version  #
+    [IsEnabled_vs]$Enabled = [IsEnabled_vs]::Unknown  #NYI until I can detect which are running
+
+
     # no: [object]$VersionInstance # type: Union( optional[version], [string] )
     # [object]$VersionInstance # type: Union( [version?], [string] )
-    [IsEnabled_vs]$Enabled = [IsEnabled_vs]::Unknown
-    [VSCodeAppType_vs]$AppType = [VSCodeAppType_vs]::Unknown
 
+    # ExtensionInfo_vs()  {}
     ExtensionInfo_vs(
         [String]$RawString
     ) {
         $this.Name, $this.Version = $RawString -split '@'
-        try {
-            $this.VersionInstance = $this.Version
-        } catch {
-            $This.VersionInstance = $script:StrNull
-        }
+        # try {
+        #     $this.VersionInstance = $this.Version
+        # } catch {
+        #     $This.VersionInstance = $script:StrNull
+        # }
 
     }
 }
 
-$codeAddons = & code.cmd @('--list-extensions', '--show-versions')
+class VSCodeExtensionsInfo {
+    [VSCodeAppType_vs]$AppType = [VSCodeAppType_vs]::Unknown # maybe moved to collection as a whole
+    [IO.FileInfo]$AppPath
+
+}
+
+$codeBin = Get-Command -CommandType Application -Name 'code.cmd' | Select-Object -First 1
+$codeInsidersBin = Get-Command -CommandType Application -Name 'code-insiders.cmd' | Select-Object -First 1
+
+$codeAddons = & $CodeBin @('--list-extensions', '--show-versions')
 | Sort-Object -Unique | ForEach-Object {
     $setting = [ExtensionInfo_vs]::new($_)
-    $setting.AppType = 'Code'
+    # $setting.AppType = 'Code'
     return $setting
 
     # if ($_ -match '(?<Name>)@(<?Version>[\d\.]+?)') {
@@ -48,10 +63,10 @@ $codeAddons = & code.cmd @('--list-extensions', '--show-versions')
     #     Version = $Matches.Version
     # }
 }
-$codeInsidersAddons = & code-insiders.cmd @('--list-extensions', '--show-versions')
+$codeInsidersAddons = & $codeInsidersBin @('--list-extensions', '--show-versions')
 | Sort-Object -Unique | ForEach-Object {
     $setting = [ExtensionInfo_vs]::new($_)
-    $setting.AppType = 'Insiders'
+    # $setting.AppType = 'Insiders'
     return $setting
 
     # if ($_ -match '(?<Name>)@(<?Version>[\d\.]+?)') {
