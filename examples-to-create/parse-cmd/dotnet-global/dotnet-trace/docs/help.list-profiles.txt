@@ -1,0 +1,9 @@
+list-profiles:
+  Lists pre-built tracing profiles with a description of what providers and filters are in each profile
+
+Usage:
+  dotnet-trace list-profiles [options]
+
+Options:
+  -?, -h, --help    Show help and usage information
+

@@ -1,0 +1,22 @@
+collect:
+  Collects a diagnostic trace from a currently running process or launch a child process and trace it. Append -- to the collect command to instruct the tool to run a command and trace it immediately. When tracing a child process, the exit code of dotnet-trace shall be that of the traced process unless the trace process encounters an error.
+
+Usage:
+  dotnet-trace collect [options]
+
+Options:
+  -p, --process-id <pid>                             The process id to collect the trace.
+  --buffersize <size>                                Sets the size of the in-memory circular buffer in megabytes. Default 256 MB. [default: 256]
+  -o, --output <trace-file-path>                     The output path for the collected trace data. If not specified it defaults to '<appname>_<yyyyMMdd>_<HHmmss>.nettrace', e.g., 'myapp_20210315_111514.nettrace'. [default: default]
+  --providers <list-of-comma-separated-providers>    A comma delimitted list of EventPipe providers to be enabled. This is in the form 'Provider[,Provider]',where Provider is in the form: 'KnownProviderName[:[Flags][:[Level][:[KeyValueArgs]]]]', and KeyValueArgs is in the form: '[key1=value1][;key2=value2]'. Values in KeyValueArgs that contain ';' or '=' characters need to be surrounded by '"', e.g., FilterAndPayloadSpecs="MyProvider/MyEvent:-Prop1=Prop1;Prop2=Prop2.A.B;". Depending on your shell, you may need to escape the '"' characters and/or surround the entire provider specification in quotes, e.g., --providers 'KnownProviderName:0x1:1:FilterSpec=\"KnownProviderName/EventName:-Prop1=Prop1;Prop2=Prop2.A.B;\"'. These providers are in addition to any providers implied by the --profile argument. If there is any discrepancy for a particular provider, the configuration here takes precedence over the implicit configuration from the profile. See documentation for examples. [default: ]
+  --profile <profile-name>                           A named pre-defined set of provider configurations that allows common tracing scenarios to be specified succinctly. [default: ]
+  --format <Chromium|NetTrace|Speedscope>            Sets the output format for the trace file. Default is NetTrace. [default: NetTrace]
+  --duration <duration-timespan>                     When specified, will trace for the given timespan and then automatically stop the trace. Provided in the form of dd:hh:mm:ss. [default: 00:00:00]
+  --clrevents <clrevents>                            List of CLR runtime events to emit. [default: ]
+  --clreventlevel <clreventlevel>                    Verbosity of CLR events to be emitted. [default: ]
+  -n, --name <name>                                  The name of the process to collect the trace.
+  --diagnostic-port <diagnosticPort>                 The path to a diagnostic port to be used. [default: ]
+  --show-child-io                                    Shows the input and output streams of a launched child process in the current console. [default: False]
+  --resume-runtime                                   Resume runtime once session has been initialized, defaults to true. Disable resume of runtime using --resume-runtime:false [default: True]
+  -?, -h, --help                                     Show help and usage information
+

@@ -1,0 +1,9 @@
+ps:
+  Lists the dotnet processes that traces can be collected from.
+
+Usage:
+  dotnet-trace ps [options]
+
+Options:
+  -?, -h, --help    Show help and usage information
+

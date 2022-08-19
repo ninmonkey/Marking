@@ -1,0 +1,15 @@
+report:
+  Generates a report into stdout from a previously generated trace.
+
+Usage:
+  dotnet-trace report [options] <tracefile> [command]
+
+Arguments:
+  <tracefile>    The file path for the trace being analyzed.
+
+Options:
+  -?, -h, --help    Show help and usage information
+
+Commands:
+  topN    Finds the top N methods that have been on the callstack the longest.
+

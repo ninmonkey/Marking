@@ -1,0 +1,14 @@
+convert:
+  Converts traces to alternate formats for use with alternate trace analysis tools. Can only convert from the nettrace format
+
+Usage:
+  dotnet-trace convert [options] [<input-filename>]
+
+Arguments:
+  <input-filename>    Input trace file to be converted. Defaults to 'default'. [default: default]
+
+Options:
+  --format <Chromium|NetTrace|Speedscope>    Sets the output format for the trace file conversion.
+  -o, --output <output-filename>             Output filename. Extension of target format will be added.
+  -?, -h, --help                             Show help and usage information
+

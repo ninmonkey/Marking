@@ -4,8 +4,25 @@
 $Templates = @{
     Newline = '<br/>'
     H1      = '<h1>{0}</h1>'
-
 }
+$Templates.FullPage = @'
+<html><head><title>dynamic generate tables</title>
+<link rel="stylesheet" href="../normalize.css">
+<body>
+{0}
+</body></head>
+'@
+$Templates.FullPageKeys = @'
+<html><head><title>dynamic generate tables</title>
+{{style}}
+</head>
+<body>
+{{content}}
+</body></head>
+'@
+
+
+
 
 
 function New-HtmlTable_nestedNaive {
@@ -21,8 +38,8 @@ function New-HtmlTable_nestedNaive {
     begin {
         # for templates only used by this function
         $Templates = @{
-            'TableHead'   = '<table>'
-            'TableFooter' = '</table>'
+            'TableRootBegin' = '<table>'
+            'TableRootEnd'   = '</table>'
         }
 
         # here strings simplify more complicated templates
@@ -38,21 +55,35 @@ function New-HtmlTable_nestedNaive {
 '@
     }
     process {
+
+
         $props = $InputObject.psobject.Properties
         | Sort-Object Name
 
-        $Templates.TableHead
+        $Templates.TableRootBegin
 
-        $cells = $props.Name | ForEach-Object {
-            $Templates.TableHeaderCell -f @( $_ )
+        # new-segment
+        if ($true) {
+            $cells = $props.Name | ForEach-Object {
+                $Templates.TableHeaderCell -f @( $_ )
+            }
+            $Templates.TableRow -f @($cells -join '')
         }
-        $Templates.TableRow -f @($cells -join '')
+
+        # new-segment
+        if ($true) {
+            $cells = $props.Value | ForEach-Object {
+                $Templates.TableCell -f @( $_ )
+            }
+            $Templates.TableRow -f @($cells -join '')
+        }
 
 
 
-        $Templates.Footer
 
 
+        $Templates.TableRootEnd
+        return
 
         # 0..2 | ForEach-Object {
         #     'a', 'b', 'c' | ForEach-Object {
@@ -69,11 +100,20 @@ function New-HtmlTable_nestedNaive {
     }
 }
 
+
 $Paths = @{
-    Ex1 = 'temp:\html.html'
+    Ex1 = Join-Path (Join-Path $PSScriptRoot '.output') 'html1.html'
+    # Ex1 = 'temp:\html.html'
 }
 
-Get-Date | New-HtmlTable_nestedNaive
+
+
+
+$dynamicTable = @(
+    Get-Date | New-HtmlTable_nestedNaive
+) -join ''
+
+$Templates.FullPage -f @( $dynamicTable )
 | sc -path $Paths.Ex1
 
 'wrote: ', @( Get-Item $Paths.Ex1 | ForEach-Object Fullname)

@@ -44,7 +44,7 @@ $settings = @{
 }
 $templateFence = @'
 
-```ps1
+```powershell
 {0}
 ```
 
@@ -65,7 +65,7 @@ $doc += @'
 
 ## Initial script
 
-```ps1
+```powershell
 {1}
 ```
 '@ -f @(
@@ -74,11 +74,11 @@ $doc += @'
 )
 
 foreach ($mode in ('IncreaseIndentationAfterEveryPipeline', 'IncreaseIndentationForFirstPipeline', 'IncreaseIndentationAfterEveryPipeline', 'NoIndentation', 'None', '')) {
-    $line = "`n`n**Mode**: ``$Mode```n`n"    
+    $line = "`n`n**Mode**: ``$Mode```n`n"
     $settings.Rules.PSUseConsistentIndentation.PipelineIndentation = $Mode
     $result = PSScriptAnalyzer\Invoke-Formatter -ScriptDefinition $script -Settings $settings
-    
-    $doc += $line    
+
+    $doc += $line
     $doc += $templateFence -f @(
         $result
     )

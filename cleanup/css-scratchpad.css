@@ -1,0 +1,23 @@
+tr > td {
+    /* background-color: pink;  */
+    /* border: 2px solid pink; */
+    /* border: 1px solid pink  !important; */
+    /* border: 2px solid rgba(200, 200, 200, 80%) !important; */
+}
+.no {
+    color: rgb(224, 121, 121, 70%) !important;
+}
+.code {
+    font-family: monospace;
+    background-color: #492330 !important;
+    /* background-color: "#0000ff"; */
+    /* color: "#0000ff" !important; */
+}
+
+/* column: .NET */
+table tr td:nth-child(3) {
+    border: 2px solid rgb(64, 64, 163, 50%);
+}
+table tr th:nth-child(3) {
+    border: 2px solid rgb(64, 64, 163, 100%);
+}

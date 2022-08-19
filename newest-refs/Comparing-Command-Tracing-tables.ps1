@@ -44,7 +44,7 @@ $results | ForEach-Object {
     $Template = @'
 ## {1}
 
-```ps1
+```powershell
 {0}
 ```
 

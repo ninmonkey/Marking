@@ -12,6 +12,7 @@ $PathsMapping = @{
 }
 $PathsMapping
 
+
 $PathsToInvestigate = @{
     Storage = Get-Item  "$Env:AppData/Code/storage.json"
 }
@@ -23,6 +24,7 @@ enum IsEnabled_vs {
     Unknown
 }
 
+# I want 'code.cmd' to auto-coerce
 enum VSCodeAppType_vs {
     Code = 1
     Insiders = 2

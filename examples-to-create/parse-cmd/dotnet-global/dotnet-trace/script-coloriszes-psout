@@ -1,0 +1,6 @@
+@(
+
+(dotnet-trace ps) -replace '\r?\n' -join "`n" -split '\n' -replace '(\s+)', {"${bg:gray60}", $_, "${bg:clear}"  -join '' }
+| Join-String -os "${bg:orange}" -Separator "${bg:pink}" -op "${bg:pink}"
+)
+

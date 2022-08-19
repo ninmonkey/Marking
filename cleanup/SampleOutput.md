@@ -6,7 +6,7 @@
 - The import showed the virus error
 
 
-```ps1
+```powershell
 & {
 
         Get-Culture 'en-gb' -ea stop
@@ -17,17 +17,17 @@
 
 ### environment
 
-| . | Version                          |
-| -------- | ---------------------------------------- |
-| **PowerShell** | **7.1.4** |
-| code-insiders | 1.62.0-insider | 
-| Commit   | 284e0db6c4cac1e557a43cd6691babdaafc2e1a9 |
-| Date     | 2021-10-12T05:45 14.621Z                 |
-| Electron | 13.5.1                                   |
-| Chrome   | 91.0.4472.164                            |
-| Node.js  | 14.16.0                                  |
-| V8       | 9.1.269.39-electron.0                    |
-| OS       | Windows_NT x64 10.0.19043                |
+| .              | Version                                  |
+| -------------- | ---------------------------------------- |
+| **PowerShell** | **7.1.4**                                |
+| code-insiders  | 1.62.0-insider                           |
+| Commit         | 284e0db6c4cac1e557a43cd6691babdaafc2e1a9 |
+| Date           | 2021-10-12T05:45 14.621Z                 |
+| Electron       | 13.5.1                                   |
+| Chrome         | 91.0.4472.164                            |
+| Node.js        | 14.16.0                                  |
+| V8             | 9.1.269.39-electron.0                    |
+| OS             | Windows_NT x64 10.0.19043                |
 
 
 ### Addons
