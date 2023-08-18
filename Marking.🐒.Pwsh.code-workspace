@@ -2,15 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "..\\Ninmonkey.TemplateText"
-		},
-		{
-			"path": "..\\Mini.Examples\\Templates"
-		},
-		{
-			"path": "..\\Splat.nin"
 		}
 	],
 	"settings": {
