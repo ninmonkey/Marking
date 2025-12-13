@@ -5,11 +5,17 @@ function Write-MarkingHtmlElement {
    .synopsis
         Write an HTML element
     .example
+        > Mark.Write-HtmlElement -Tag 'a' -InnerText 'about' -Attributes @{ class = 'nav.bold' }
+            <a class="nav.bold">about</a>
+
+        > Mark.Write-HtmlElement -Tag 'hr'
+            <hr>
+    .example
+        > Mark.Write-HtmlElement -Tag 'foobar' -VoidElement
+            <foobar>
     #>
     [Alias( 'Mark.Write-HtmlElement' )]
-    [OutputType(
-        [string] # when: !PassThru
-    )]
+    [OutputType( [string] )]
     [CmdletBinding()]
     param(
         # Html/Svg element name
@@ -18,10 +24,9 @@ function Write-MarkingHtmlElement {
             [ArgumentCompletions('a', 'div', 'p', 'ul', 'li', 'section', 'nav', 'html', 'body')]
             [string] $ElementName,
 
-        # Attributes
+        # element Attributes
         [Parameter()]
-            [ValidateScript({throw 'param: nyi'})]
-            [hashtable] $Attributes,
+            [hashtable] $Attributes = @{},
 
         # Child Nodes
         [Parameter()]
@@ -52,8 +57,10 @@ function Write-MarkingHtmlElement {
         }
     }
     end {
-        # pad if not empty
-        if( $attr_sb.Length -gt 0 ) { $attr_sb.Insert( 0, ' ' ) }
+        # no longer: if( $attr_sb.Length -gt 0 ) { $attr_sb.Insert( 0, ' ' ) }
+        $Attributes.GetEnumerator() | %{
+            $null = $attr_sb.AppendFormat( ' {0}="{1}"', $_.Key, $_.Value )
+        }
 
         if( $isVoidElement ) {
             $null = $sb.AppendFormat(
@@ -66,8 +73,7 @@ function Write-MarkingHtmlElement {
                 $ElementName, $attr_sb.ToString(), ($innerText -join "`n")
             )
         }
-        # ex: <a href="url">name</a>
-
+        # ex: <a href="url" class="nav">name</a>
         return $sb.ToString()
     }
 }
