@@ -32,21 +32,41 @@ function Write-MarkingHtmlElement {
         # Instead of ChildNodes, use raw strings instead
         # Or merge as one parameter?
         [Parameter()]
-            [string[]] $InnerText
+            [string[]] $InnerText,
+
+        # is an HTML void element, ie: <hr>
+        [Parameter()]
+            [switch] $VoidElement
     )
     begin {
-        $sb = [Text.StringBuilder]::new()
+        $sb      = [Text.StringBuilder]::new()
         $attr_sb = [Text.StringBuilder]::new()
+
+        [bool] $isVoidElement = $VoidElement -or ( _Test-HtmlElementIsVoidElement -TagName $ElementName )
+        if(
+            $IsVoidElement -and (
+                $PSBoundParameters.ContainsKey('ChildNodes') -or $PSBoundParameters.ContainsKey('InnerText')
+            )
+        ) {
+            Write-Error "Void element '<${ElementName}>' was passed ChildNodes/InnerText"
+        }
     }
     end {
-        # pad if missing
+        # pad if not empty
         if( $attr_sb.Length -gt 0 ) { $attr_sb.Insert( 0, ' ' ) }
 
+        if( $isVoidElement ) {
+            $null = $sb.AppendFormat(
+                '<{0}{1}>',
+                $ElementName, $attr_sb.ToString(), ($innerText -join "`n")
+            )
+        } else {
+            $null = $sb.AppendFormat(
+                '<{0}{1}>{2}</{0}>',
+                $ElementName, $attr_sb.ToString(), ($innerText -join "`n")
+            )
+        }
         # ex: <a href="url">name</a>
-        $null = $sb.AppendFormat(
-            '<{0}{1}>{2}</{0}>',
-            $ElementName, $attr_sb.ToString(), ($innerText -join "`n")
-        )
 
         return $sb.ToString()
     }
