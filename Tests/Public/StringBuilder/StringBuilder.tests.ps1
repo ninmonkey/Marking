@@ -36,5 +36,17 @@ Describe 'Marking.StringBuilder' {
         $accum.Trim()
             | Should -BeExactly "0`n1`n2`n3"
     }
+    It 'StrBuilder By Reference' {
+        [System.Text.StringBuilder] $sbTest = ''
+        Mark.StringBuilder.Clear -StrBuilder $sbTest
+        0..1 | Mark.StringBuilder.Append -StrBuilder $sbTest
+        2..3 | Mark.StringBuilder.Append -StrBuilder $sbTest
+        Mark.StringBuilder.ToString -StrBuilder $sbTest
 
+        ( ( Mark.StringBuilder.ToString -StrBuilder $sbTest  ) -replace '\r?\n', "`n" ).trim()
+            | Should -BeExactly "01`n23" -Because 'Manually crafted'
+
+        $sbTest.ToString() -EQ ( Mark.StringBuilder.ToString -StrBuilder $sbTest )
+            | Should -Be $True -Because 'It Should be the same reference'
+    }
 }
