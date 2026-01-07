@@ -15,7 +15,7 @@
     [OutputType( [Void] )]
     param(
         # objects to append to string
-        [Parameter(ValueFromPipeline)]
+        [Parameter( ValueFromPipeline )]
             [object[]] $InputObject,
 
         # Write output to StringBuilder else the module fallback StringBuilder
@@ -27,9 +27,16 @@
         [Alias('Delimiter')]
             [String] $Separator = ''
     )
-    end {
-        $items = @( $InputObject )
+    begin {
         $strB  = $StrBuilder ?? $script:__SbDefault
+        [Collections.Generic.List[Object]] $items = @()
+    }
+    process {
+        foreach( $Obj in $InputObject ) {
+            $items.Add( $Obj )
+        }
+    }
+    end {
         $null  = $strB.AppendJoin( $Separator, $items )
         $null  = $strB.AppendLine()
     }
