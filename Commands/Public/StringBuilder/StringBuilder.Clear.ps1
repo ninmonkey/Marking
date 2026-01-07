@@ -1,11 +1,17 @@
-﻿function _StringBuilder.Clear {
+﻿function Marking.StringBuilder.Clear {
      <#
     .SYNOPSIS
-        [internal] Clears [StringBuilder] reference else shared fallback StringBuilder. Outputs nothing.
+        Clears [StringBuilder] reference else shared fallback StringBuilder. Outputs nothing.
     .DESCRIPTION
         No output. Writes to the explicit, else fallback string builder.
     #>
-    [Alias('_Sb.Clear')]
+    # [Alias('_Sb.Clear' # 'Mark.StrBuilder.Clear' )]
+    [Alias(
+        # '_Sb.Clear',
+        # 'Mark.StrBuilder.Clear',
+        'Mark.StringBuilder.Clear',
+        'Mark.Sb.Clear'
+    )]
     [CmdletBinding()]
     [OutputType( [Void] )]
     param(

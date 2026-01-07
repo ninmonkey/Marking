@@ -1,11 +1,16 @@
-﻿function _StringBuilder.Append {
+﻿function Marking.StringBuilder.Append { # original name: _StringBuilder.Append
      <#
     .SYNOPSIS
-        [internal] Append [StringBuilder] reference else shared. Outputs nothing.
+        Append [StringBuilder] reference else shared. Outputs nothing.
     .DESCRIPTION
         No output. Writes to the explicit, else fallback string builder.
     #>
-    [Alias('_Sb.Append')]
+    [Alias(
+        # '_Sb.Append',
+        # 'Mark.StrBuilder.Append',
+        'Mark.StringBuilder.Append',
+        'Mark.Sb.Append'
+    )]
     [CmdletBinding()]
     [OutputType( [Void] )]
     param(

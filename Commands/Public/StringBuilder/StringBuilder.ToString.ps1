@@ -1,11 +1,16 @@
-﻿function _StringBuilder.ToString {
+﻿function Marking.StringBuilder.ToString {
      <#
     .SYNOPSIS
-        [internal] Outputs the [StringBuilder] as a string
+        Outputs the [StringBuilder] as a string
     .notes
         never throws or errors, when using null values
     #>
-    [Alias('_Sb.ToString')]
+    [Alias(
+        # '_Sb.ToString',
+        # 'Mark.StrBuilder.ToString',
+        'Mark.StringBuilder.ToString',
+        'Mark.Sb.ToString'
+    )]
     [CmdletBinding()]
     [OutputType( [string] )]
     param(
