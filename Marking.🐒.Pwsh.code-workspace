@@ -5,11 +5,12 @@
 		}
 	],
 	"settings": {
-		"markdownlint.config": {
-			"MD028": false,
-			"MD025": {
-				"front_matter_title": ""
-			}
-		}
+        "powershell.pester.outputVerbosity": "FromPreference"
+		// "markdownlint.config": {
+		// 	"MD028": false,
+		// 	"MD025": {
+		// 		"front_matter_title": ""
+		// 	}
+		// }
 	}
 }

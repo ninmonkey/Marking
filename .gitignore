@@ -1,0 +1,22 @@
+*.code-workspace
+PSScriptAnalyzerSettings.psd1
+# Ignore test files
+Scratch/
+
+# ignore common binaries and artifact paths
+testResults.xml
+coverage.xml
+BuildOutput/
+# /dist
+# /out
+# /Release
+# common "binaries" or non-code artifacts
+# *.{exe,dll,zip}
+# *.{docx,xlsx,pbix,pbip}
+# Images
+# *.{png,gif}
+
+# other unwanted text files
+# *.{log,csv,json,tmp,txt}
+
+
