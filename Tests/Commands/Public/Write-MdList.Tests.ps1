@@ -12,12 +12,23 @@
             }
             @{
                 Text     = @(
-                    '<a href="toc">toc</a>'
-                    '<a href="foo">foo</a>'
+                    '<a href="#toc">toc</a>'
+                    '<a href="foo.txt">foo</a>'
                 )
                 Expected = @'
-- <a href="toc">toc</a>
-- <a href="foo">foo</a>
+- <a href="#toc">toc</a>
+- <a href="foo.txt">foo</a>
+
+'@ | NormalizeLineEnding
+            }
+            @{
+                Text     = @(
+                    Write-MdLink 'toc2' '#toc2'
+                    Write-MdLink 'readme' 'readme.md'
+                )
+                Expected = @'
+- [toc2](#toc2)
+- [readme](readme.md)
 
 '@ | NormalizeLineEnding
             }
@@ -26,11 +37,6 @@
             # using Normalize because "Should-BeString -Expected .. -NormalizeLineEnding" only normalizes the final one, not all line endings.
             $actual = Write-MdList -Text $Text | NormalizeLineEnding
             $actual | Should-BeString -Expected $Expected # -TrimWhitespace # -NormalizeLineEnding
-        }
-    }
-    Context 'From Param' {
-        It 'List Equals' -Skip {
-
         }
     }
 }
