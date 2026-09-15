@@ -41,10 +41,12 @@
 #region Init
 $myFile       = $MyInvocation.MyCommand.ScriptBlock.File
 $script:MyModuleName = 'Marking'
-$myRoot       = $myFile | Split-Path | Split-Path
+$myRoot       = $myFile | Split-Path
 $BuildConfig = @{
     LineEnding = "`r`n"
 }
+
+$myRoot | write-Verbose
 $cdStackName = "${myModuleName}.build"
 Push-Location -Stack $cdStackName $myRoot
 
@@ -182,9 +184,11 @@ if( $commands_summary.count -gt 0 ) {
 #>
 "@
         writeRegion -RegionName 'Module.Before.ps1'
-        $ModuleBeginDefinition = Get-Item -ea 'continue' ( Join-Path $myRoot 'Commands/Module.Before.ps1' )
+        $ModuleBeginDefinition = Get-Item -ea 'silentlyContinue' ( Join-Path $myRoot 'Commands/Module.Before.ps1' )
         if( $ModuleBeginDefinition ) {
             ( Get-Content -raw $ModuleBeginDefinition ) -replace '\r?\n', $BuildConfig.LineEnding
+        } else {
+            'optional "Commands/Module.Before.ps1" was not found' | Write-Verbose -verbose
         }
         writeRegion -RegionName 'Module.Before.ps1' -EndRegion
 
@@ -201,9 +205,11 @@ if( $commands_summary.count -gt 0 ) {
         writeRegion -RegionName 'Public Functions' -EndRegion
 
         writeRegion -RegionName 'Module.After.ps1'
-        $ModuleEndDefinition = Get-Item -ea 'continue' ( Join-Path $myRoot 'Commands/Module.After.ps1' )
+        $ModuleEndDefinition = Get-Item -ea 'silentlyContinue' ( Join-Path $myRoot 'Commands/Module.After.ps1' )
         if( $ModuleEndDefinition ) {
             ( Get-Content -raw $ModuleEndDefinition ) -replace '\r?\n', $BuildConfig.LineEnding
+        } else {
+            'optional "Commands/Module.After.ps1" was not found' | Write-Verbose -verbose
         }
         writeRegion -RegionName 'Module.After.ps1' -EndRegion
     )
