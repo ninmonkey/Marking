@@ -107,6 +107,21 @@ function Date.Str  {
     }
 }
 
+function NormalizeLineEnding {
+    <#
+    .SYNOPSIS
+        Because "Should-BeString -Expected .. -NormalizeLineEnding" only normalizes the final one, not all line endings.
+    #>
+    param(
+        [switch] $AsNewline
+    )
+    $Replace =
+        if( $AsNewLine ) { "`n" }
+        else { [System.Environment]::NewLine }
+
+    $Input -replace '\r?\n', $Replace
+}
+
 function Helper.WorkspaceRoot {
     <#
     .synopsis
