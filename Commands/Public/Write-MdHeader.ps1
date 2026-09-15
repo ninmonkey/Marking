@@ -5,9 +5,16 @@
     #>
     [CmdletBinding()]
     param(
+        # Header text
         [string] $Text,
-        [Alias('Depth')] [int] $Level = 1
+
+        # Header depth. The number of '#'. ( Default: 1 )
+        [ArgumentCompletions(1, 2, 3, 4, 5, 6)]
+        [Alias('Depth')]
+        [int] $Level = 1
     )
-    $prefix = '#' * $Level -join ''
-    "${Prefix} ${Text}"
+    end {
+        $prefix = '#' * $Level -join ''
+        "${Prefix} ${Text}"
+    }
 }
