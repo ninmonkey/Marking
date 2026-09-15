@@ -1,15 +1,15 @@
 ﻿Describe 'Write-MdHeader' {
     Context 'Contains exact response' {
-        it 'Text: <Text>, Level: <Level>' -ForEach @(
+        it 'Text: "<Text>", Level: <Level>' -ForEach @(
             @{
                 Text = 'Title'
                 Level = 1
-                Expected = ' # Title'
+                Expected = '# Title'
             }
             @{
                 Text = 'Name'
                 Level = 3
-                Expected = ' ### Name'
+                Expected = '### Name'
             }
         ) {
             $actual = Write-MdHeader -Text $Text -Level $Level

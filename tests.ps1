@@ -23,7 +23,7 @@ $Config.Output.StackTraceVerbosity = 'Filtered' # valid: None | FirstLine | [Fil
 $Config.Output.CIFormat        = 'Auto'  # valid: None | [Auto] | AzureDevOps | GithubActions
 $Config.Output.RenderMode      = 'Auto'  # valid: [Auto] | Ansi | ConsoleColor | PlainText
 $Config.Output.ShowTags        = $true
-$Config.Debug.ShowStartMarkers = $true   # shows names of long-running tests that are stuck
+$Config.Debug.ShowStartMarkers = $false   # shows names of long-running tests that are stuck
 
 $Config.TestResult.Enabled   = $true
 $Config.CodeCoverage.Enabled = $false
@@ -48,7 +48,7 @@ if( $false ) {
 
 # always rebuild module at least once
 #   Maybe redundant with Pester.BeforeContainer.ps1
-.\Build.ps1
+. ( Join-Path $PSScriptRoot './Build.ps1')
 
 Invoke-Pester -Configuration $Config
 

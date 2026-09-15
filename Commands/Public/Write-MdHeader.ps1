@@ -9,5 +9,5 @@
         [Alias('Depth')] [int] $Level = 1
     )
     $prefix = '#' * $Level -join ''
-    " ${Prefix} ${Text}"
+    "${Prefix} ${Text}"
 }
