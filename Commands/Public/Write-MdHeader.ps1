@@ -3,6 +3,7 @@
     .SYNOPSIS
         Writes Md headers, like <h1>, <h2>, etc.
     #>
+    [OutputType( [string] )]
     [CmdletBinding()]
     param(
         # Header text

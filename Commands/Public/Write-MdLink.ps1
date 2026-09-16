@@ -6,6 +6,7 @@
         Write-MdLink -Title 'Back to TOC' -Url '#toc'
         # out: [Back to TOC](#toc)
     #>
+    [OutputType( [string] )]
     [CmdletBinding()]
     param(
         # Header text

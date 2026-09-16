@@ -2,7 +2,15 @@
     <#
     .SYNOPSIS
         Writes Md lists, - item 1
+    .example
+        # show files
+        gci . -name | Write-MdList
+
+        # output:
+            # - readme.md
+            # - Marking.psd1
     #>
+    [OutputType( [string] )]
     [CmdletBinding()]
     param(
         # Header text
