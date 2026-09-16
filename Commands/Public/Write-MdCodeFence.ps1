@@ -23,13 +23,23 @@
         [ValidateSet('`', '~')]
         [string] $Character = '`'
     )
+    begin {
+        $Ticks = $Character * 3 -join ''
+        $Prefix = '{0}{1}' -f $Ticks, $Language
+        $Suffix = '{0}' -f $Ticks
+        [Collections.Generic.List[object]] $Content = @()
+    }
+    process {
+        foreach( $Line in $Text ) {
+            $Content.Add( $Line )
+        }
+    }
     end {
         @(
-            $Ticks = $Character * 3 -join ''
             "`n"
-            '{0}{1}' -f $Ticks, $Language
-            $Text | Join-String -sep "`n" -op "`n" -os "`n"
-            '{0}' -f $Ticks
+            $Prefix
+            $Content | Join-String -sep "`n" -op "`n" -os "`n"
+            $Suffix
             "`n"
         ) -join ''
     }

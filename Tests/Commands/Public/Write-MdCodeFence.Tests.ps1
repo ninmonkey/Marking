@@ -28,6 +28,22 @@ $y = "`u{2400}"
                 | Should-BeString -Expected $Expected
         }
     }
+    It 'By Pipeline' {
+        $Expected = @'
+
+~~~
+foo
+bar
+~~~
+
+'@
+
+        'foo', 'bar'
+        | Write-MdCodeFence -Character '~'
+        | NormalizeLineEnding
+        | Should-BeString -Expected $Expected
+    }
+
     Context 'Escape Contents<Url>' {
         It '(nyi) Anything to escape in fence?' -Skip {
             # test cases from the specs: https://spec.commonmark.org/0.31.2/#autolinks
