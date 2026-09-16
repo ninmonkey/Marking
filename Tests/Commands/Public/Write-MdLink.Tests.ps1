@@ -8,6 +8,14 @@
 '@
             | NormalizeLineEnding
         }
+        @{
+            Title    = 'readme'
+            Url      = 'c:\user data\file.md'
+            Expected = @'
+[readme](c:\user%20data\file.md)
+'@
+            | NormalizeLineEnding
+        }
     ) {
         It 'By Param Name is: <Expected>' {
             $actual = Write-MdLink -Title $Title -Url $Url | NormalizeLineEnding

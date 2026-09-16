@@ -2,6 +2,9 @@
     <#
     .SYNOPSIS
         Writes Md Links / Urls, like [Title](Url)
+    .example
+        Write-MdLink -Title 'Back to TOC' -Url '#toc'
+        # out: [Back to TOC](#toc)
     #>
     [CmdletBinding()]
     param(
@@ -21,6 +24,7 @@
         [string] $Url
     )
     end {
+        $Url = $Url | Escape-LinkUrl
         return '[{0}]({1})' -f $Title, $Url
     }
 }
