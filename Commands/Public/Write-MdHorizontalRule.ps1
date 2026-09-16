@@ -9,6 +9,7 @@
     [OutputType( [string] )]
     [CmdletBinding()]
     param(
+        # Which character to use? ( Default: "---" )
         [ValidateSet('-', '*', '_')]
         [string] $Character = '-'
     )
