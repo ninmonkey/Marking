@@ -1,5 +1,5 @@
 ﻿Describe 'Write-MdItalic' {
-    Context 'Bold: <Text>' -ForEach @(
+    Context 'Italic: <Text>' -ForEach @(
         @{
             Text = 'File List:'
             Expected = '*File List:*'
