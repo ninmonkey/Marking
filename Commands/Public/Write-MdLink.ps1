@@ -9,11 +9,11 @@
     [OutputType( [string] )]
     [CmdletBinding()]
     param(
-        # Header text
-        [Parameter(Mandatory)]
+        # Header text ( optional )
         [Alias('Name')]
         [object] $Title,
 
+        # Url to link to.
         # Currently accepts any Url because sometimes you want invalid urls
         [ArgumentCompletions(
             "'#top'",
@@ -25,6 +25,11 @@
         [string] $Url
     )
     end {
+        # If title is missing, write <autolink.html> format
+        if( [string]::IsNullOrWhitespace( $Title )  ) {
+            return "<${Url}>"
+        }
+
         $Url = $Url | Escape-LinkUrl
         return '[{0}]({1})' -f $Title, $Url
     }
