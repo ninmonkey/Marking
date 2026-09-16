@@ -20,6 +20,5 @@
 - [ ] with alt text. [specs: image](https://spec.commonmark.org/current/#images)
 # `Write-MdLink`
 
-- [ ] needs to test escaping characters to ensure it doesn't break MD formatting
-  - see [specs: link-text](https://spec.commonmark.org/current/#links)
+- [ ] escape non-space chars: [specs: link-text](https://spec.commonmark.org/current/#links)
 - [ ] add alternate `<autolink>` [autolink format](https://spec.commonmark.org/current/#autolinks)
